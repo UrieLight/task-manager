@@ -1,13 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300&family=Inter:wght@600&family=Poppins:wght@100;300;400;600&display=swap');
+body{
+  margin: 0 auto;
+}
 
 .App {
+  display: flex;
   width: 100vw;
   height: 100vh;
-  display: flex;
   flex-direction: column;
   align-items: center;
   background-color:#2f74c0;
-  font-family: "Fira";
+  font-family: "Fira Sans";
 }
 
 .heading {
