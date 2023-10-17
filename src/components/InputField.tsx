@@ -1,6 +1,11 @@
 import '../assets/inputformStyle.css'
 
-const InputField = () => {
+interface Props{
+  todo: string,
+  setTodo: React.Dispatch<React.SetStateAction<string>>
+}
+
+const InputField: React.FC<Props> = ({todo, setTodo}) => {
   return (
     <form className='form__bloc'>
         <input
@@ -9,6 +14,8 @@ const InputField = () => {
           name="task"
           id="task_id"
           className="input__box"
+          value={todo}
+          onChange={(e)=>setTodo(e.target.value)}
         />
         <button className='button__submit'>Add</button>
     </form>
