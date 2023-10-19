@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Task } from '../models/taskModel'
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai'
 import { MdDone } from 'react-icons/md'
@@ -31,13 +31,24 @@ const Todo: React.FC<Props> = ({todo, todosList, setTodos}) => {
     setTodos( todosList.filter((item) => item.id != todoId) )
   }
 
+  //Setting focus on the input, when in edit mode
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [editMode])
+  
+
   return (
     <form className='todo__item' onSubmit={(e)=>handleEdit(e, todo.id)}>
       {todo.isDone ? 
         <s className='todo__item--text--done'>{todo.todoName}</s> :
+
         (!editMode ? 
           <span className='todo__item--text'>{todo.todoName}</span> : 
+
           <input 
+            ref={inputRef}
+            className='todo__item--text-editMode'
             type="text" 
             name="todo" 
             value={editTodoNewValue} 
