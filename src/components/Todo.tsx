@@ -10,13 +10,15 @@ interface Props{
 }
 const Todo: React.FC<Props> = ({todo, todosList, setTodos}) => {
 
-  const [edit, setEdit] = useState<boolean>(false);
-  const [editTodo, setEditTodo] = useState<string>(todo.todoName)
+  const [editMode, setEditMode] = useState<boolean>(false);
+  const [editTodoNewValue, setEditTodoNewValue] = useState<string>(todo.todoName)
   
-  const handleEdit = (todoId: number) => {
-    setTodos(
-      todosList.map((item) => item.id === todoId ? {...item, isDone:!item.isDone} : item)
-    )
+  const handleEdit = (e: React.FormEvent<HTMLFormElement>, todoId: number) => {
+    e.preventDefault();
+
+    setTodos( todosList.map((item) => item.id === todoId ? {...item, todoName:editTodoNewValue} : item))
+
+    setEditMode(false)
   }
 
   const handleDone = (todoId: number) => {
@@ -30,10 +32,18 @@ const Todo: React.FC<Props> = ({todo, todosList, setTodos}) => {
   }
 
   return (
-    <form className='todo__item'>
+    <form className='todo__item' onSubmit={(e)=>handleEdit(e, todo.id)}>
       {todo.isDone ? 
         <s className='todo__item--text--done'>{todo.todoName}</s> :
-        <span className='todo__item--text'>{todo.todoName}</span>
+        (!editMode ? 
+          <span className='todo__item--text'>{todo.todoName}</span> : 
+          <input 
+            type="text" 
+            name="todo" 
+            value={editTodoNewValue} 
+            onChange={(e)=>{ setEditTodoNewValue(e.target.value)}}
+          />
+        )
       }      
       <div>
           {todo.isDone ?           
@@ -41,8 +51,7 @@ const Todo: React.FC<Props> = ({todo, todosList, setTodos}) => {
             <span 
               className='todo__item--icon' 
               onClick={()=> {
-                setEdit(!edit)
-                handleEdit(todo.id)
+                setEditMode(!editMode)
               }
               }><AiFillEdit /></span>
           }
