@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Task } from '../models/taskModel'
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai'
 import { MdDone } from 'react-icons/md'
@@ -9,14 +9,24 @@ interface Props{
   setTodos: React.Dispatch<React.SetStateAction<Task[]>>
 }
 const Todo: React.FC<Props> = ({todo, todosList, setTodos}) => {
+
+  const [edit, setEdit] = useState<boolean>(false);
+  const [editTodo, setEditTodo] = useState<string>(todo.todoName)
   
-  const handleDone = (todoId: number) => {
-    
+  const handleEdit = (todoId: number) => {
     setTodos(
-      todosList.map((item) => 
-        todo.id === todoId ? {...item, isDone:!item.isDone} : item
-      )
+      todosList.map((item) => item.id === todoId ? {...item, isDone:!item.isDone} : item)
     )
+  }
+
+  const handleDone = (todoId: number) => {
+    setTodos(
+      todosList.map((item) => item.id === todoId ? {...item, isDone:!item.isDone} : item)
+    )
+  }
+
+  const handleDelete = (todoId: number) => {
+    setTodos( todosList.filter((item) => item.id != todoId) )
   }
 
   return (
@@ -26,10 +36,18 @@ const Todo: React.FC<Props> = ({todo, todosList, setTodos}) => {
         <span className='todo__item--text'>{todo.todoName}</span>
       }      
       <div>
-          <span className='todo__item--icon'><AiFillEdit /></span>
-          <span className='todo__item--icon'><AiFillDelete /></span>
-          <span className='todo__item--icon' onClick={()=>handleDone(todo.id)}
-          ><MdDone /></span>
+          {todo.isDone ?           
+            '' :
+            <span 
+              className='todo__item--icon' 
+              onClick={()=> {
+                setEdit(!edit)
+                handleEdit(todo.id)
+              }
+              }><AiFillEdit /></span>
+          }
+          <span className='todo__item--icon' onClick={()=>handleDelete(todo.id)}><AiFillDelete /></span>
+          <span className='todo__item--icon' onClick={()=>handleDone(todo.id)}><MdDone /></span>
       </div>
     </form>
   )
